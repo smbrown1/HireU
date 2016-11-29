@@ -14,64 +14,65 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.steven.hireu.Model.Tutor;
+import com.example.steven.hireu.Model.UserManager;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
+
 public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder> {
 
-    private String[] relatives;
-    private String[] events;
+    private ArrayList<Tutor> tutorSet;
     private Context context;
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
     // you provide access to all the views for a data item in a view holder
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        public TextView mTextView;
-        public TextView mSubTextView;
-        private Button button;
-        private String id, type;
-        public Context context;
-        public ImageView imageView;
+        Tutor tutor;
+        Context context;
+        TextView person;
+        TextView major;
         public ViewHolder(View v) {
             super(v);
-            mTextView = (TextView) v.findViewById(R.id.searchText);
-            mSubTextView = (TextView) v.findViewById(R.id.searchSubText);
-            button = (Button) v.findViewById(R.id.searchPersonButton);
-            imageView = (ImageView) v.findViewById(R.id.searchImage);
-            button.setOnClickListener(new View.OnClickListener()
-            {
+            person = (TextView)v.findViewById(R.id.searchText);
+            major = (TextView)v.findViewById(R.id.searchSubText);
+            Button button = (Button) v.findViewById(R.id.searchPersonButton);
+            button.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View v)
-                {
-                   /* if(type.equals("relative"))
-                    {
-                        Intent intent = new Intent(context, PersonActivity.class);
-                        intent.putExtra("personID",id);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        context.startActivity(intent);
-                    }
-                    else
-                    {
-                        Intent intent = new Intent(context, MapsActivity.class);
-                        intent.putExtra("eventID",id);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                context.startActivity(intent);
-                    }*/
+                public void onClick(View view) {
+                    UserManager.getInstance().setCurrentUser(ViewHolder.this.tutor);
+                    Intent i = new Intent(ViewHolder.this.context,ProfileActivity.class);
+                    ViewHolder.this.context.startActivity(i);
                 }
             });
         }
-        public void setID(String id, String type)
+        public void setTutor(Tutor tutor)
         {
-            this.id=id;
-            this.type=type;
+            this.tutor = tutor;
+            String p = "Person: "+tutor.getName();
+            String m = "Major: "+tutor.getMajor();
+            person.setText(p);
+            major.setText(m);
         }
 
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public SearchAdapter(String[] relatives, String[] events, Context context)
+    public SearchAdapter(String constraint, Context context)
     {
         this.context = context;
-        this.relatives = relatives;
-        this.events = events;
+        tutorSet = new ArrayList<>();
+        Collection<Tutor> t = UserManager.getInstance().getTutorList().values();
+        for(Tutor tutor:t)
+        {
+            if(tutor.toString().toLowerCase().contains(constraint.toLowerCase()))
+            {
+                tutorSet.add(tutor);
+            }
+        }
     }
 
     // Create new views (invoked by the layout manager)
@@ -92,40 +93,14 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
     public void onBindViewHolder(ViewHolder holder, int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
-        holder.context = context;
-        /*if(position < relatives.length)
-        {
-            holder.setID(relatives[position], "relative");
-
-           holder.mTextView.setText(Person.SINGLETON.getFamily().get(relatives[position]).getName());
-           holder.mSubTextView.setText("");
-            if(Person.SINGLETON.getFamily().get(relatives[position]).getGender().toLowerCase().equals("m")) {
-                holder.imageView.setImageResource(R.drawable.men_symbol);
-            }
-            else
-            {
-                holder.imageView.setImageResource(R.drawable.women_symbols);
-            }
-        }
-        else
-        {
-            position -= relatives.length;
-            holder.setID(events[position], "event");
-            Event e = Person.SINGLETON.getSelectedEvents().get(events[position]);
-            holder.mTextView.setText(e.toString());
-            holder.mSubTextView.setText(
-                    Person.SINGLETON.getFamily().get(
-                    Person.SINGLETON.getSelectedEvents()
-                            .get(events[position]).getPersonID()).toString()
-            );
-        }*/
-
+        holder.context=context;
+        holder.setTutor(tutorSet.get(position));
     }
 
     // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
-        return relatives.length + events.length;
+        return tutorSet.size();
     }
 
 

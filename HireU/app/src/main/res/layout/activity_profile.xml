@@ -10,10 +10,10 @@
     tools:context="com.example.steven.hireu.ProfileActivity">
 
     <ImageView
-        android:layout_width="500px"
+        android:layout_width="500dp"
         android:layout_height="wrap_content"
         android:id="@+id/imageView"
-        android:src="@drawable/Steven"
+        android:src="@drawable/person"
         android:layout_marginBottom="213dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true" />
@@ -45,7 +45,7 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Name: Steven Brown"
         android:id="@+id/textView"
-        android:layout_above="@+id/scrollView"
+        android:layout_above="@id/scrollView"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
@@ -62,7 +62,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Experiance: Two years Computer Science teaching assistant"
+        android:text="Experience: Two years Computer Science teaching assistant"
         android:id="@+id/textView3"
         android:layout_below="@+id/textView2"
         android:layout_alignParentLeft="true"

@@ -34,6 +34,10 @@ public class TutorRegisterActivity extends AppCompatActivity {
         register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(!email.getText().toString().toLowerCase().contains("byu"))
+                {
+                    Toast.makeText(TutorRegisterActivity.this,"Not a valid university email",Toast.LENGTH_SHORT).show();
+                }
                 if(passwordRepeat.getText().toString().equals(password.getText().toString())) {
                     Tutor t = new Tutor(email.getText().toString(),
                             name.getText().toString(),
